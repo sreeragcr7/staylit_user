@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:staylit/ui/screen/login_screen.dart';
 import 'package:staylit/ui/screen/otp_screen.dart';
 import 'package:staylit/ui/screen/profile_screen.dart';
@@ -7,6 +8,12 @@ import 'package:staylit/ui/screen/food2_screen.dart';
 import 'package:staylit/ui/screen/register_screen.dart';
 import 'package:staylit/ui/screen/contact_screen.dart';
 import 'package:staylit/ui/screen/updatep_screen.dart';
+import 'package:staylit/ui/screen/home_screen.dart';
+import 'package:staylit/ui/screen/dash_board_screen.dart';
+import 'package:staylit/ui/screen/booking_screen.dart';
+import 'package:staylit/ui/screen/cleaning_screen.dart';
+import 'package:staylit/ui/screen/laundary_screen.dart';
+import 'package:staylit/ui/screen/maintainance_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ContactScreen(),
+      home: LoginScreen(),
     );
   }
 }

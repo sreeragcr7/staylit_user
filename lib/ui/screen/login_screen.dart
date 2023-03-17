@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:staylit/ui/screen/try_screen.dart';
-import 'package:staylit/ui/widgets/custom_button.dart';
+
+import 'package:staylit/widgets/custom_button.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -23,6 +23,12 @@ class LoginScreen extends StatelessWidget {
             child: Container(
               decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 255, 255, 255),
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 10,
+                        offset: Offset(1, 10),
+                        color: Color.fromARGB(255, 17, 17, 17)),
+                  ],
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(55),
                       topRight: Radius.circular(55))),
@@ -97,7 +103,7 @@ class LoginScreen extends StatelessWidget {
                 "Login",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.berkshireSwash(
-                    textStyle: Theme.of(context).textTheme.headline4,
+                    textStyle: Theme.of(context).textTheme.headline2,
                     color: Color.fromARGB(255, 255, 255, 255),
                     shadows: <Shadow>[
                       Shadow(
