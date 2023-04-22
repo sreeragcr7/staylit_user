@@ -1,37 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:staylit/ui/screens/login_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:staylit/ui/screen/login_screen.dart';
-import 'package:staylit/ui/screen/otp_screen.dart';
-import 'package:staylit/ui/screen/profile_screen.dart';
-import 'package:staylit/ui/screen/food_screen.dart';
-import 'package:staylit/ui/screen/food2_screen.dart';
-import 'package:staylit/ui/screen/register_screen.dart';
-import 'package:staylit/ui/screen/contact_screen.dart';
-import 'package:staylit/ui/screen/updatep_screen.dart';
-import 'package:staylit/ui/screen/home_screen.dart';
-import 'package:staylit/ui/screen/dash_board_screen.dart';
-import 'package:staylit/ui/screen/booking_screen.dart';
-import 'package:staylit/ui/screen/cleaning_screen.dart';
-import 'package:staylit/ui/screen/laundary_screen.dart';
-import 'package:staylit/ui/screen/maintainance_screen.dart';
-
-void main() {
+void main(List<String> args) async {
+  await Supabase.initialize(
+    url: 'https://uidlngnandekepjmjxjg.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpZGxuZ25hbmRla2Vwam1qeGpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzc1MDkzMTEsImV4cCI6MTk5MzA4NTMxMX0.KkieRhq0C36pOjOREtG1bqjdLU2fmCN0v727Dkwzd1c',
+  );
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      theme: ThemeData.light().copyWith(
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.blue[50],
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 15,
+          ),
+          iconColor: Colors.blueAccent,
+          prefixIconColor: Colors.blueAccent,
+          suffixIconColor: Colors.blueAccent,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide.none,
+          ),
+        ),
       ),
-      home: LoginScreen(),
+      home: const LoginScreen(),
     );
   }
 }
