@@ -7,14 +7,15 @@ class CustomButton extends StatelessWidget {
   final String label;
   final Color? color, labelColor;
   final bool isLoading;
-  const CustomButton({
-    super.key,
-    required this.onPressed,
-    required this.label,
-    this.color,
-    this.labelColor,
-    this.isLoading = false,
-  });
+  final MainAxisSize mainAxisSize;
+  const CustomButton(
+      {super.key,
+      required this.onPressed,
+      required this.label,
+      this.color,
+      this.labelColor,
+      this.isLoading = false,
+      this.mainAxisSize = MainAxisSize.max});
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +29,7 @@ class CustomButton extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: mainAxisSize,
           children: [
             isLoading
                 ? const SizedBox(
@@ -35,6 +37,7 @@ class CustomButton extends StatelessWidget {
                     width: 20,
                     child: CircularProgressIndicator(
                       strokeWidth: 1.5,
+                      color: Colors.white,
                     ),
                   )
                 : Text(

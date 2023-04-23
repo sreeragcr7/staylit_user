@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     tabController = TabController(
-      length: 3,
+      length: 2,
       vsync: this,
     );
     super.initState();
@@ -46,7 +46,6 @@ class _HomeScreenState extends State<HomeScreen>
           controller: tabController,
           children: const [
             ServiceListingScreen(),
-            NotificationScreen(),
             SettingsScreen(),
           ],
         ),
@@ -94,22 +93,13 @@ class CustomBottomNavBar extends StatelessWidget {
           isSelected: selectedIndex == 0,
         ),
         NavBarButton(
-          label: 'Notifications',
-          iconData: Icons.notifications_none_outlined,
-          selectedIconData: Icons.notifications_active,
-          onPressed: () {
-            onChanged(1);
-          },
-          isSelected: selectedIndex == 1,
-        ),
-        NavBarButton(
           label: 'Settings',
           iconData: Icons.settings_outlined,
           selectedIconData: Icons.settings,
           onPressed: () {
-            onChanged(2);
+            onChanged(1);
           },
-          isSelected: selectedIndex == 2,
+          isSelected: selectedIndex == 1,
         ),
       ],
     );

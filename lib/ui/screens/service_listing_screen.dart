@@ -1,7 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:staylit/blocs/service/service_bloc.dart';
 import 'package:staylit/ui/screens/service_request_screen.dart';
+import 'package:staylit/ui/widgets/custom_alert_dialog.dart';
 import 'package:staylit/ui/widgets/custom_card.dart';
+import 'package:staylit/ui/widgets/custom_progress_indicator.dart';
 import 'package:staylit/ui/widgets/custom_search.dart';
 
 class ServiceListingScreen extends StatefulWidget {
@@ -12,85 +17,137 @@ class ServiceListingScreen extends StatefulWidget {
 }
 
 class _ServiceListingScreenState extends State<ServiceListingScreen> {
+  ServiceBloc serviceBloc = ServiceBloc();
+
+  String? query;
+
+  getServices() {
+    serviceBloc.add(GetAllServiceEvent(
+      query: query,
+    ));
+  }
+
+  @override
+  void initState() {
+    getServices();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              'Available services',
-              style: GoogleFonts.notoSans(
-                textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                    ),
+    return BlocProvider<ServiceBloc>.value(
+      value: serviceBloc,
+      child: BlocConsumer<ServiceBloc, ServiceState>(
+        listener: (context, state) {
+          if (state is ServiceFailureState) {
+            showDialog(
+              context: context,
+              builder: (context) => CustomAlertDialog(
+                title: 'Failed',
+                message: state.message,
+                primaryButtonLabel: 'Ok',
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomSearch(
-              onSearch: (search) {},
-            ),
-            const Divider(
-              color: Colors.black54,
-              height: 20,
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: GridView.count(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  childAspectRatio: 1 / 1.35,
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  children: List<Widget>.generate(
-                    10,
-                    (index) => ServiceCard(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ServiceRequestScreen(),
-                          ),
-                        );
-                      },
+            );
+          }
+        },
+        builder: (context, state) {
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Available services',
+                    style: GoogleFonts.notoSans(
+                      textStyle:
+                          Theme.of(context).textTheme.titleMedium!.copyWith(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
                     ),
                   ),
-                ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomSearch(
+                    onSearch: (search) {
+                      query = search;
+                      getServices();
+                    },
+                  ),
+                  const Divider(
+                    color: Colors.black54,
+                    height: 20,
+                  ),
+                  Expanded(
+                    child: state is ServiceSuccessState
+                        ? state.services.isNotEmpty
+                            ? SingleChildScrollView(
+                                child: GridView.count(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  childAspectRatio: 1 / 1.35,
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  children: List<Widget>.generate(
+                                    state.services.length,
+                                    (index) => ServiceCard(
+                                      serviceDetails: state.services[index],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : const Center(
+                                child: Text('No services found'),
+                              )
+                        : state is ServiceLoadingState
+                            ? const Center(
+                                child: CustomProgressIndicator(),
+                              )
+                            : const SizedBox(),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 }
 
 class ServiceCard extends StatelessWidget {
-  final Function() onTap;
+  final Map<String, dynamic> serviceDetails;
   const ServiceCard({
     super.key,
-    required this.onTap,
+    required this.serviceDetails,
   });
 
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      onPressed: onTap,
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ServiceRequestScreen(
+              serviceDetails: serviceDetails,
+            ),
+          ),
+        );
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 15,
@@ -101,18 +158,22 @@ class ServiceCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                'https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+              child: CachedNetworkImage(
+                imageUrl: serviceDetails['image_url'],
                 fit: BoxFit.cover,
                 height: 150,
                 width: 150,
+                progressIndicatorBuilder: (context, url, progress) =>
+                    const Center(
+                  child: CustomProgressIndicator(),
+                ),
               ),
             ),
             const SizedBox(
               height: 10,
             ),
             Text(
-              'Cleaning',
+              serviceDetails['service'],
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -122,7 +183,7 @@ class ServiceCard extends StatelessWidget {
               height: 5,
             ),
             Text(
-              '₹500',
+              '₹${serviceDetails['price'].toString()}',
               style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.w500,
