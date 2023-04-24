@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:staylit/blocs/complaint/complaint_bloc.dart';
 import 'package:staylit/ui/widgets/custom_alert_dialog.dart';
 
 class AddComplaintDialog extends StatefulWidget {
+  final int serviceRequestId;
   const AddComplaintDialog({
     super.key,
+    required this.serviceRequestId,
   });
 
   @override
@@ -51,19 +54,17 @@ class _AddComplaintDialogState extends State<AddComplaintDialog> {
       ),
       primaryButtonLabel: 'Send',
       primaryOnPressed: () async {
-        try {
-          if (_formKey.currentState!.validate()) {
-            Navigator.pop(context);
-          }
-        } catch (e) {
-          showDialog(
-            context: context,
-            builder: (context) => CustomAlertDialog(
-              title: 'Failed!',
-              message: e.toString(),
-              primaryButtonLabel: 'Ok',
-            ),
+        if (_formKey.currentState!.validate()) {
+          isLoading = true;
+          setState(() {});
+          ComplaintBloc().add(
+            AddComplaintEvent(
+                complaint: _complaintController.text.trim(),
+                serviceRequestId: widget.serviceRequestId),
           );
+          isLoading = true;
+          setState(() {});
+          Navigator.pop(context);
         }
       },
       secondaryButtonLabel: 'Cancel',

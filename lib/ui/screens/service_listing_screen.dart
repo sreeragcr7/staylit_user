@@ -92,7 +92,7 @@ class _ServiceListingScreenState extends State<ServiceListingScreen> {
                                 child: GridView.count(
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
-                                  childAspectRatio: 1 / 1.35,
+                                  childAspectRatio: 1 / 1.5,
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 10,
                                   mainAxisSpacing: 10,

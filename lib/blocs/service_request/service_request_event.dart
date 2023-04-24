@@ -3,13 +3,12 @@ part of 'service_request_bloc.dart';
 @immutable
 abstract class ServiceRequestEvent {}
 
-class ChangeServiceRequestStatusEvent extends ServiceRequestEvent {
-  final int requestId;
-  final String status;
+class MakePaymentEvent extends ServiceRequestEvent {
+  final int requestId, serviceId;
 
-  ChangeServiceRequestStatusEvent({
+  MakePaymentEvent({
     required this.requestId,
-    required this.status,
+    required this.serviceId,
   });
 }
 
@@ -23,9 +22,11 @@ class AddServiceRequestEvent extends ServiceRequestEvent {
 
 class DeleteServiceRequestEvent extends ServiceRequestEvent {
   final int serviceRequestId;
+  final int serviceId;
 
   DeleteServiceRequestEvent({
     required this.serviceRequestId,
+    required this.serviceId,
   });
 }
 
