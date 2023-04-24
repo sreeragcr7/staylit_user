@@ -469,7 +469,8 @@ class _ServiceRequestCardState extends State<ServiceRequestCard> {
                   ? Colors.transparent
                   : Colors.grey,
             ),
-            widget.serviceRequestDetails['status'] == 'accepted'
+            widget.serviceRequestDetails['status'] == 'accepted' &&
+                    widget.serviceRequestDetails['payment_status'] == 'pending'
                 ? CustomActionButton(
                     iconData: Icons.payment_outlined,
                     label: 'Pay Now',

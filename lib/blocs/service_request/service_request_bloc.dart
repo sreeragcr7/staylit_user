@@ -100,16 +100,14 @@ class ServiceRequestBloc
               .eq('user_id', supabaseClient.auth.currentUser!.id);
           add(GetAllServiceRequestsEvent(serviceId: event.serviceId));
         } else if (event is MakePaymentEvent) {
-          await queryTable
-              .update(
-                {
-                  'payment_status': 'paid',
-                },
-              )
-              .eq('id', event.requestId)
-              .eq('user_id', supabaseClient.auth.currentUser!.id);
+          await queryTable.update(
+            {
+              'payment_status': 'paid',
+            },
+          ).eq('id', event.requestId);
           add(GetAllServiceRequestsEvent(
             serviceId: event.serviceId,
+            status: 'active',
           ));
         }
       } catch (e, s) {
